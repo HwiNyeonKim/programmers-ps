@@ -20,19 +20,14 @@ public class StockPrice {
             int stocksSize = stocks.size();
             int doneSize = done.size();
 
-            if (doneSize == 0) {
-                // 마지막 주식 가격은 문제에서 0으로 정답이 주어져 있다.
-                answer[stocksSize] = 0;
-            } else {
-                // 현재 선택된 주식이 언제까지 가격이 떨어지지 않는지 계산
-                for (int i = doneSize - 1; i >= 0; i--) {
-                    // i = 0 부터 할 시 매 턴 마다 element이 발생하여 비효율적
-                    int comp = done.get(i);
+            // 현재 선택된 주식이 언제까지 가격이 떨어지지 않는지 계산
+            for (int i = doneSize - 1; i >= 0; i--) {
+                // i = 0 부터 할 시 매 턴 마다 element이 발생하여 비효율적
+                int comp = done.get(i);
 
-                    if (currentStock > comp) {
-                        answer[stocksSize] = doneSize - i;
-                        break;
-                    }
+                if (currentStock > comp) {
+                    answer[stocksSize] = doneSize - i;
+                    break;
                 }
             }
 
