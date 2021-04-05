@@ -13,10 +13,12 @@ public class KthNumber {
             int[] target = Arrays.copyOfRange(array, command[0] - 1, command[1]);
 
             // sort
-            // Solution 0
-            // sort(target);
             // Solution 1
-            bubbleSort(target);
+            // sort(target);
+            // Solution 2
+            // bubbleSort(target);
+            // Solution 3
+            selectionSort(target);
 
             // record answer
             answer[i] = target[command[2] - 1];
@@ -25,12 +27,12 @@ public class KthNumber {
         return answer;
     }
 
-    // Solution 0: 내장 함수 사용
+    // Solution 1: 내장 함수 사용
     public static void sort(int[] arr) {
         Arrays.sort(arr);
     }
 
-    // Solution 1: Bubble Sort
+    // Solution 2: Bubble Sort
     public static void bubbleSort(int[] arr) {
         for (int i = 0; i < arr.length - 1; i++) {
             for (int j = i + 1; j < arr.length; j++) {
@@ -38,6 +40,19 @@ public class KthNumber {
                     swap(arr, i, j);
                 }
             }
+        }
+    }
+
+    // Solution 3: Selection Sort
+    public static void selectionSort(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            int minIdx = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minIdx]) {
+                    minIdx = j;
+                }
+            }
+            swap(arr, i, minIdx);
         }
     }
 
