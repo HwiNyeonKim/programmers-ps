@@ -18,7 +18,10 @@ public class KthNumber {
             // Solution 2
             // bubbleSort(target);
             // Solution 3
-            selectionSort(target);
+            // selectionSort(target);
+            // Solution 4
+            insertionSort(target);
+
 
             // record answer
             answer[i] = target[command[2] - 1];
@@ -53,6 +56,26 @@ public class KthNumber {
                 }
             }
             swap(arr, i, minIdx);
+        }
+    }
+
+    // Solution 4: Insertion Sort
+    public static void insertionSort(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int pick = arr[i];
+            // pick이 들어갈 idx를 찾는다.
+            int j = 0;
+            for (; j < i; j++) {
+                if (arr[j] > pick) {
+                    break;
+                }
+            }
+            // j부터 i-1번쨰 까지를 한칸씩 뒤로 민다.
+            for (int k = i - 1; k >= j; k--) {
+                arr[k + 1] = arr[k];
+            }
+            // pick이 j번째 자리에 들어간다.
+            arr[j] = pick;
         }
     }
 
