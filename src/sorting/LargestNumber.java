@@ -16,12 +16,12 @@ public class LargestNumber {
             return "0";
         }
 
-        String answer = "";
-        for (int i = 0; i < data.length; i++) {
-            answer += data[i].getValue();
+        StringBuilder answer = new StringBuilder();
+        for (Data datum : data) {
+            answer.append(datum.getValue());
         }
 
-        return answer;
+        return answer.toString();
     }
 }
 
