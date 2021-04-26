@@ -18,7 +18,7 @@ public class BestAlbum {
         // 1-2. 각 장르별 Song 정렬
         Map<String, PriorityQueue<Song>> bestSongs4EachGenre = new HashMap<>();
         for (int i = 0; i < genres.length; i++) {
-            PriorityQueue<Song> pq4Songs = bestSongs4EachGenre.getOrDefault(genres[i], new PriorityQueue<Song>());
+            PriorityQueue<Song> pq4Songs = bestSongs4EachGenre.getOrDefault(genres[i], new PriorityQueue<>());
             pq4Songs.offer(new Song(genres[i], plays[i], i));
             bestSongs4EachGenre.put(genres[i], pq4Songs); // is it really best?
         }
@@ -30,9 +30,9 @@ public class BestAlbum {
             String currentGenreName = currentGenre.getGenreName();
 
             PriorityQueue<Song> pq4SongsOfEachGenre = bestSongs4EachGenre.get(currentGenreName);
-            int size = pq4SongsOfEachGenre.size() < 2 ? pq4SongsOfEachGenre.size() : 2;
+            int size = Math.min(pq4SongsOfEachGenre.size(), 2);
             for (int i = 0; i < size; i++) {
-                answer.add(pq4SongsOfEachGenre.poll().getRegNo());
+                answer.add(Objects.requireNonNull(pq4SongsOfEachGenre.poll()).getRegNo());
             }
         }
 
@@ -41,9 +41,9 @@ public class BestAlbum {
 }
 
 class Song implements Comparable<Song> {
-    private String genre;
-    private int plays;
-    private int regNo;
+    private final String genre;
+    private final int plays;
+    private final int regNo;
 
     Song(String genre, int plays, int regNo) {
         this.genre = genre;
@@ -70,8 +70,8 @@ class Song implements Comparable<Song> {
 }
 
 class Genre implements Comparable<Genre> {
-    private String genreName;
-    private int totalPlays;
+    private final String genreName;
+    private final int totalPlays;
 
     Genre(String genreName, int totalPlays) {
         this.genreName = genreName;
