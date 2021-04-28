@@ -26,4 +26,9 @@ class ListOfPhoneNumbersTest {
     void solution4() {
         assertEquals(true, obj.solution(new String[] {"12", "235", "2345", "567", "88"}));
     }
+
+    @Test
+    void solution5() {
+        assertEquals(true, obj.solution(new String[] {"113", "114", "5356", "3333", "111111", "88"}));
+    }
 }
