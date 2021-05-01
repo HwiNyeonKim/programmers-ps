@@ -63,17 +63,16 @@ class HardDiskSystem {
                 jobQueue.offer(waitQueue.poll());
             }
 
-            // do jobs scheduled
-            if (!jobQueue.isEmpty()) {
-                // have some jobs to do
-                Job currentJob = jobQueue.poll();
-                currentTime += currentJob.getWorkTime();
-                totalElapsedTime += (currentTime - currentJob.getRequestedTime());
-                countJobDone++;
-            } else {
-                // no jobs to do at current time
+            if (jobQueue.isEmpty()) {
                 currentTime = waitQueue.peek().getRequestedTime();
+                continue;
             }
+
+            // do jobs scheduled
+            Job currentJob = jobQueue.poll();
+            currentTime += currentJob.getWorkTime();
+            totalElapsedTime += (currentTime - currentJob.getRequestedTime());
+            countJobDone++;
         }
     }
 }
