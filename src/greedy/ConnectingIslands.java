@@ -19,7 +19,7 @@ public class ConnectingIslands {
             PriorityQueue<Edge> possibleEdges = new PriorityQueue<>();
             for (int vertex : vertices) {
                 for (Edge edge : edges) {
-                    if (edge.isIncluding(vertex)) {
+                    if (edge.isIncluding(vertex) && !isAlreadyBothPointsVisited(edge, vertices)) {
                         possibleEdges.offer(edge);
                     }
                 }
@@ -33,6 +33,12 @@ public class ConnectingIslands {
         }
 
         return totalCost;
+    }
+
+    private boolean isAlreadyBothPointsVisited(Edge edge, Set<Integer> vertices) {
+        int v1 = edge.getOneSide();
+        int v2 = edge.getTheOtherSide();
+        return vertices.contains(v1) && vertices.contains(v2);
     }
 }
 
@@ -65,10 +71,11 @@ class Edge implements Comparable<Edge> {
 
     @Override
     public int compareTo(Edge o) {
-        return this.cost - o.getCost(); // 오름차순으로 정렬되는것이 맞는지?
+        return this.cost - o.getCost();
     }
 
     public boolean equals(Edge o) {
+        // for Set.remove()
         return (oneSide == o.getOneSide()) && (theOtherSide == o.getTheOtherSide()) && (cost == o.getCost());
     }
 }
