@@ -5,46 +5,27 @@ import java.util.*;
 public class SurveillanceCamera {
     public int solution(int[][] routes) {
         int counter = 0;
-        List<Car> cars = new LinkedList<>(); // which kind of list is more efficient?
+        Arrays.sort(routes, (a, b) -> {
+            return a[1] - b[1];
+        });
+
+        Queue<Car> cars = new LinkedList<>();
         for (int[] route : routes) {
-            cars.add(new Car(route[0], route[1]));
+            cars.offer(new Car(route[0], route[1]));
         }
-        Collections.sort(cars);
 
         while (!cars.isEmpty()) {
+            int cameraPos = cars.poll().getTo();
+            counter++;
+
             int size = cars.size();
-            Map<Integer, Integer> map = new HashMap<>(); // setup point : detectable number of cars
             for (int i = 0; i < size; i++) {
-                int currentPosition = cars.get(i).getFrom();
-                int count = 0;
-
-                for (Car car : cars) {
-                    if (car.isDetectedAt(currentPosition)) {
-                        count++;
-                    } else {
-                        break;
-                    }
-                }
-
-                map.put(currentPosition, count);
-            }
-
-            // find maximum value
-            Map.Entry<Integer, Integer> positionAndDetectableCars = map.entrySet().stream().max(Comparator.comparing(Map.Entry::getValue)).get();
-            int carmeraPos = positionAndDetectableCars.getKey();
-
-            // remove from first car to the car that has the chosen starting point.
-            int idx = -1;
-            for (int i = 0; i < cars.size(); i++) {
-                Car car = cars.get(i);
-                if (car.isDetectedAt(carmeraPos)) {
-                    idx = i;
+                if (cars.peek().isDetectedAt(cameraPos)) {
+                    cars.poll();
                 } else {
                     break;
                 }
             }
-            cars = cars.subList(idx + 1, size);
-            counter++;
         }
 
         return counter;
@@ -56,8 +37,8 @@ class Car implements Comparable<Car> {
     private int to;
 
     Car(int from, int to) {
-        this.from = from;
-        this.to = to;
+        this.from = Math.min(from, to);
+        this.to = Math.max(from, to);
     }
 
     public int getFrom() {
@@ -70,7 +51,7 @@ class Car implements Comparable<Car> {
 
     @Override
     public int compareTo(Car o) {
-        return from - o.getFrom();
+        return to - o.getTo();
     }
 
     public boolean isDetectedAt(int pos) {
