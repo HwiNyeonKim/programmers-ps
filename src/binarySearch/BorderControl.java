@@ -9,15 +9,15 @@ public class BorderControl {
         long maximum = (long) times[times.length - 1] * n;
         long mid = (minimum + maximum) / 2;
 
-        long answer = count(mid, times);
+        long number = count(mid, times);
         while (minimum < maximum) {
-            if (answer >= n) {
+            if (number >= n) {
                 maximum = mid;
             } else {
                 minimum = mid + 1;
             }
             mid = (minimum + maximum) / 2;
-            answer = count(mid, times);
+            number = count(mid, times);
         }
 
         return mid;
