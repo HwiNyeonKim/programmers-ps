@@ -5,9 +5,7 @@ import java.util.*;
 public class SurveillanceCamera {
     public int solution(int[][] routes) {
         int counter = 0;
-        Arrays.sort(routes, (a, b) -> {
-            return a[1] - b[1];
-        });
+        Arrays.sort(routes, Comparator.comparingInt(a -> a[1]));
 
         Queue<Car> cars = new LinkedList<>();
         for (int[] route : routes) {
@@ -32,7 +30,7 @@ public class SurveillanceCamera {
     }
 }
 
-class Car implements Comparable<Car> {
+class Car {
     private int from;
     private int to;
 
@@ -41,17 +39,8 @@ class Car implements Comparable<Car> {
         this.to = Math.max(from, to);
     }
 
-    public int getFrom() {
-        return from;
-    }
-
     public int getTo() {
         return to;
-    }
-
-    @Override
-    public int compareTo(Car o) {
-        return to - o.getTo();
     }
 
     public boolean isDetectedAt(int pos) {
