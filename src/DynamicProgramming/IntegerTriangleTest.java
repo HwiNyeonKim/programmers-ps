@@ -17,4 +17,11 @@ class IntegerTriangleTest {
                 {4, 5, 2, 6, 5}
         }));
     }
+
+    @Test
+    void solution2() {
+        assertEquals(10, obj.solution(new int[][] {
+                {10}
+        }));
+    }
 }
