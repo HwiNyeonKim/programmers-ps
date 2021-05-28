@@ -1,4 +1,4 @@
-package DynamicProgramming;
+package dynamicProgramming;
 
 public class IntegerTriangle {
     public int solution(int[][] triangle) {
