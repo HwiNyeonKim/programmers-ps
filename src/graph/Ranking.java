@@ -1,118 +1,49 @@
 package graph;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Ranking {
     public int solution(int n, int[][] results) {
-        Node[] nodes = new Node[n];
-        for (int i = 0; i < n; i++) {
-            nodes[i] = new Node(i + 1);
-        }
+        int[][] matchResults = new int[n][n];
 
-        // graph update
+        // initial setup
         for (int[] result : results) {
-            Node winner = nodes[result[0] - 1];
-            Node loser = nodes[result[1] - 1];
+            int winner = result[0] - 1;
+            int loser = result[1] - 1;
 
-            winner.defeat(loser);
+            matchResults[winner][loser] =  1;
+            matchResults[loser][winner] = -1;
         }
 
-        // 랭킹 결정
-        int answer = 0;
-        for (Node node : nodes) {
-            node.updateParentCount();;
-            node.updateChildrenCount();
+        // a→b, b→c 이면 a→c
+        for (int b = 0; b < n; b++) {
+            for (int a = 0; a < n; a++) {
+                for (int c = 0; c < n; c++) {
+                    if (matchResults[a][b] > 0 && matchResults[a][c] == 0) {
+                        // a가 b에게 이겼지만, a가 c를 이겼는지는 아직 모를 때
+                        if (matchResults[b][c] > 0) {
+                            // b가 c에게 이겼으면
+                            matchResults[a][c] = 1; // a도 c에게 승리
+                            matchResults[c][a] = -1;
+                        }
+                    }
+                }
+            }
+        }
 
-            if (node.getParentsCount() + node.getChildrenCount() == (n - 1)) {
+        int answer = 0;
+        for (int i = 0; i < n; i++) {
+            int count = 0;
+            for (int j = 0; j < n; j++) {
+                if (matchResults[i][j] != 0) {
+                    // i번째 선수가 j번째 선수에 대해 승리 혹은 패배가 확인되는 경우
+                    count++;
+                }
+            }
+            if (count == (n - 1)) {
+                // i번째 선수의 나머지 선수들과의 (직, 간접적인) 승패가 모두 명확한 경우, 즉 순위를 알 수 있는 경우
                 answer++;
             }
         }
 
         return answer;
-    }
-}
-
-class Node {
-    int regNo;
-    int flowIn;
-    int flowOut; // always flowIn + 1
-    Set<Node> flowInFrom;
-    Set<Node> flowOutTo;
-    // for determining rank
-    Set<Node> entireParents;
-    Set<Node> entireChildren;
-
-    Node(int regNo) {
-        this.regNo = regNo;
-        flowIn = 0;
-        flowOut = 0;
-        flowInFrom = new HashSet<>();
-        flowOutTo = new HashSet<>();
-        // for determining rank
-        entireParents = new HashSet<>();
-        entireChildren = new HashSet<>();
-    }
-
-    public void defeat(Node loser) {
-        flowOut = flowIn + 1;
-        loser.flowIn += flowOut;
-
-        flowOutTo.add(loser);
-        loser.flowInFrom.add(this);
-
-
-        // 변경된 flow의 영향 전파
-        for (Node node : loser.flowOutTo) {
-            loser.updateFlow(node);
-        }
-    }
-
-    private void updateFlow(Node node) {
-        flowOut = flowIn + 1;
-        node.flowIn = flowOut;
-
-        for (Node loserOfLoser : node.flowOutTo) {
-            node.updateFlow(loserOfLoser);
-        }
-    }
-
-    public boolean equals(Node node) {
-        return regNo == node.regNo;
-    }
-
-    public void updateCount() {
-        updateParentCount();
-        updateChildrenCount();
-    }
-
-    public void updateParentCount() {
-        if (getParentsCount() != 0) {
-            return;
-        }
-        for (Node parent : flowInFrom) {
-            parent.updateParentCount();
-            entireParents.add(parent);
-            entireParents.addAll(parent.entireParents);
-        }
-    }
-
-    public void updateChildrenCount() {
-        if (getChildrenCount() != 0) {
-            return;
-        }
-        for (Node child : flowOutTo) {
-            child.updateChildrenCount();
-            entireChildren.add(child);
-            entireChildren.addAll(child.entireChildren);
-        }
-    }
-
-    public int getParentsCount() {
-        return entireParents.size();
-    }
-
-    public int getChildrenCount() {
-        return entireChildren.size();
     }
 }
