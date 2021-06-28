@@ -1,10 +1,8 @@
 package exercise;
 
 public class Fibonacci {
-    private static long[] data;
-
     public int solution(int n) {
-        data =  new long[n + 1];
+        long[] data =  new long[n + 1];
         data[0] = 0;
         data[1] = 1;
 
