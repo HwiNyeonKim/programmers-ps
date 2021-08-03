@@ -14,7 +14,7 @@ public class Delivery {
 
         for (int[] road : roads) {
             towns[road[0] - 1][road[1] - 1] = Math.min(towns[road[0] - 1][road[1] - 1], road[2]);
-            towns[road[1] - 1][road[0] - 1] = Math.min(towns[road[1] - 1][road[0] - 1], road[2]);
+            towns[road[1] - 1][road[0] - 1] = towns[road[0] - 1][road[1] - 1];
         }
 
         Set<Integer> visited = new HashSet<>();
