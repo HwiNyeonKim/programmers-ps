@@ -4,49 +4,45 @@ import java.util.*;
 
 public class ConvertWords {
     public int solution(String begin, String target, String[] words) {
-        Queue<String> queuePossibleStrings = new LinkedList<>();
-        Set<String> setConvertSteps = new HashSet<>();
-        queuePossibleStrings.offer(begin);
-        for (String word : words) {
-            setConvertSteps.add(word);
-        }
+        Queue<String> currentPossibleStrings = new LinkedList<>();
+        currentPossibleStrings.offer(begin);
+
+        Set<String> availableStrings = new HashSet<>(Arrays.asList(words));
 
         int count = 0;
-        while (!queuePossibleStrings.isEmpty()) {
-            int size = queuePossibleStrings.size();
+        while (!currentPossibleStrings.isEmpty()) {
+            int size = currentPossibleStrings.size();
 
             for (int i = 0; i < size; i++) {
-                String currentString = queuePossibleStrings.poll();
+                String currentString = currentPossibleStrings.poll();
                 if (currentString.equals(target)) {
                     return count;
                 }
 
-                for (String convertedString : convertString(currentString, setConvertSteps)) {
-                    queuePossibleStrings.offer(convertedString);
-                }
+                currentPossibleStrings.addAll(convertString(currentString, availableStrings));
             }
             count++;
         }
         return 0; // impossible to convert
     }
 
-    private List<String> convertString(String currentString, Set<String> setConvertSteps) {
+    private List<String> convertString(String currentString, Set<String> availableStrings) {
         List<String> result = new LinkedList<>();
         int size = currentString.length();
 
         for (int i = 0; i < size; i++) {
             char[] chars = currentString.toCharArray();
 
-            Iterator<String> iter = setConvertSteps.iterator();
-            Set<Character> changableCharacters = new HashSet<>();
+            Iterator<String> iter = availableStrings.iterator();
+            Set<Character> changeableCharacters = new HashSet<>();
             while (iter.hasNext()) {
-                changableCharacters.add(iter.next().charAt(i));
+                changeableCharacters.add(iter.next().charAt(i));
             }
 
-            for (char ch : changableCharacters) {
+            for (char ch : changeableCharacters) {
                 chars[i] = ch;
                 String convertedString = new String(chars);
-                if (setConvertSteps.remove(convertedString)) {
+                if (availableStrings.remove(convertedString)) {
                     result.add(convertedString);
                 }
             }
