@@ -15,34 +15,34 @@ public class PracticeExam {
         }
 
         // 최고점수 확인
-        int topScore = this.findTopScore(students);
+        int highestScore = findHighestScore(students);
 
         // 최고 점수를 받은 학생 탐색
-        ArrayList<Integer> topStudentsID = new ArrayList<>();
+        ArrayList<Integer> topStudentsId = new ArrayList<>();
         for (Student student : students) {
-            if (topScore == student.getScore()) {
-                topStudentsID.add(student.getID());
+            if (highestScore == student.getScore()) {
+                topStudentsId.add(student.getId());
             }
         }
 
-        return topStudentsID.stream().mapToInt(i -> i).toArray();
+        return topStudentsId.stream().mapToInt(i -> i).toArray();
     }
 
-    private int findTopScore(Student[] students) {
-        int topScore = 0;
+    private int findHighestScore(Student[] students) {
+        int highestScore = 0;
         for (Student student : students) {
             int score = student.getScore();
-            if (score > topScore) {
-                topScore = score;
+            if (score > highestScore) {
+                highestScore = score;
             }
         }
-        return topScore;
+        return highestScore;
     }
 }
 
 class Student {
-    private int[] answerSheet;
-    private int id;
+    private final int[] answerSheet;
+    private final int id;
     private int score;
 
     Student(int[] answerSheet, int id) {
@@ -61,18 +61,14 @@ class Student {
                 currentScore++;
             }
         }
-        this.setScore(currentScore);
-    }
-
-    private void setScore(int score) {
-        this.score = score;
+        this.score = currentScore;
     }
 
     public int getScore() {
         return this.score;
     }
 
-    public int getID() {
+    public int getId() {
         return this.id;
     }
 
