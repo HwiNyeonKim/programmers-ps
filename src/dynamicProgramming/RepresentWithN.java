@@ -7,7 +7,6 @@ import java.util.Set;
 
 public class RepresentWithN {
     public int solution(int N, int number) {
-        int answer = -1;
         List<Set<Integer>> list = new ArrayList<>();
         for (int i = 0 ; i < 8; i++) {
             list.add(new HashSet<>());
@@ -36,12 +35,11 @@ public class RepresentWithN {
             }
 
             if (list.get(i).contains(number)) {
-                answer = i + 1;
-                break;
+                return i + 1;
             }
         }
 
-        return answer;
+        return -1;
     }
 
     private String stringRepeat(int N, int times) {
