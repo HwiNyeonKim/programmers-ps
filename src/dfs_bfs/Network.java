@@ -1,27 +1,42 @@
 package dfs_bfs;
 
 public class Network {
+    public static int identifiedComputersCount = 0;
+
     public int solution(int n, int[][] computers) {
-        int count = 0;
+        boolean[][] connected = new boolean[n][n];
         for (int i = 0; i < n; i++) {
-            if (computers[i][i] == 1) {
-                dfs(computers, i);
-                count++;
+            for (int j = 0; j < n; j++) {
+                connected[i][j] = computers[i][j] == 1;
             }
         }
+
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            if (connected[i][i]) {
+                dfs(connected, i);
+                count++;
+            }
+
+            if (identifiedComputersCount == n) {
+                break;
+            }
+        }
+
         return count;
     }
 
-    private void dfs(int[][] computers, int i) {
-        if (i < 0 || i >= computers.length || computers[i][i] != 1) {
+    private void dfs(boolean[][] connected, int i) {
+        if (i < 0 || i >= connected.length || !connected[i][i]) {
             return;
         }
 
-        computers[i][i] = 7; // mark as visited
+        connected[i][i] = false; // mark as visited
+        identifiedComputersCount++;
 
-        for (int j = 0; j < computers.length; j++) {
-            if (computers[i][j] == 1) {
-                dfs(computers, j);
+        for (int j = 0; j < connected.length; j++) {
+            if (connected[i][j]) {
+                dfs(connected, j);
             }
         }
     }
