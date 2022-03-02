@@ -9,7 +9,7 @@ public class IntegerTriangle {
             for (int j = 0; j < nextLine.length; j++) {
                 int left = currentLine[j];
                 int right = currentLine[j + 1];
-                nextLine[j] = Math.max(nextLine[j] + left, nextLine[j] + right);
+                nextLine[j] += Math.max(left, right);
             }
         }
 
