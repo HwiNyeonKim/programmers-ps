@@ -3,28 +3,32 @@ package dfs_bfs;
 import java.util.*;
 
 public class TravelRoute {
-    public String[] solution(String[][] tickets) {
-        // 1. 공항들의 이름을 모두 모아 오름차순으로 정렬한다.
-        // 오름차순으로 정렬하는 이유는, 문제에 주어진 조건에서 가능한 경로가 복수일 경우
-        // 알파벳 순으로 순서가 앞서는 경로를 정답으로 return 하도록 했기 때문이다.
-        Set<String> namesOfAirports = new HashSet<>();
-        for (String[] ticket : tickets) {
-            namesOfAirports.add(ticket[0]);
-            namesOfAirports.add(ticket[1]);
-        }
-        String[] listOfAirports = namesOfAirports.toArray(new String[0]);
-        Arrays.sort(listOfAirports);
+    public static int ticketsLeft;
 
-        // 2. 편의성을 위해 공항 이름 - 인덱스 관계를 만들어준다.
+    public String[] solution(String[][] tickets) {
+        ticketsLeft = tickets.length;
+
+        // 1. 공항들의 이름을 오름차순 정렬
+        // 오름차순 정렬 ->
+        // 가능한 경로가 복수일 경우 알파벳의 오름차순으로 경로를 return
+        Set<String> airportNames = new HashSet<>();
+        for (String[] ticket : tickets) {
+            airportNames.add(ticket[0]);
+            airportNames.add(ticket[1]);
+        }
+
+        String[] airports = airportNames.stream().sorted().toArray(String[]::new);
+
+        // 2. 계산 편의성을 위한 [공항 이름 - 인덱스] 관계 설정
         Map<String, Integer> nameToIdx = new HashMap<>();
         Map<Integer, String> idxToName = new HashMap<>();
-        for (int i = 0; i < listOfAirports.length; i++) {
-            nameToIdx.put(listOfAirports[i], i);
-            idxToName.put(i, listOfAirports[i]);
+        for (int i = 0; i < airports.length; i++) {
+            nameToIdx.put(airports[i], i);
+            idxToName.put(i, airports[i]);
         }
 
-        // 3. 출발지 - 도착지 관계에 대해서, 각 공항의 잔여 방문 횟수를 의미하는 grid를 만든다.
-        int[][] grid = new int[listOfAirports.length][listOfAirports.length]; // [from][to]
+        // 3. [출발지 - 도착지] 관계에 대해서, 각 공항에 대한 잔여 방문 횟수 grid 생성
+        int[][] grid = new int[airports.length][airports.length]; // [from][to]
         for (String[] ticket : tickets) {
             int fromIdx = nameToIdx.get(ticket[0]);
             int toIdx = nameToIdx.get(ticket[1]);
@@ -37,17 +41,11 @@ public class TravelRoute {
         int startingIdx = nameToIdx.get(startingPoint);
         myRoute.offer(startingIdx);
 
-        // 5. DFS 방식으로 전체 루트를 탐색한다.
+        // 5. DFS 방식으로 전체 루트를 탐색
         dfs(startingIdx, grid, myRoute);
 
-        // 6. index 값으로 주어진 결과를 String으로 변환한다.
-        int totalVisitCount = tickets.length + 1; // 티켓이 n장일 때, 방문하는 도시는 n+1
-        String[] answer = new String[totalVisitCount];
-        for (int i = 0; i < totalVisitCount; i++) {
-            answer[i] = idxToName.get(myRoute.poll());
-        }
-
-        return answer;
+        // 6. index 값으로 주어진 결과를 String으로 변환
+        return myRoute.stream().map(idxToName::get).toArray(String[]::new);
     }
 
     private void dfs(int currentIdx, int[][] grid, ArrayDeque<Integer> myRoute) {
@@ -58,28 +56,17 @@ public class TravelRoute {
                 // i = 다음 도착지의 index
                 myRoute.offer(i);
                 currentlyAvailableDestinations[i]--;
+                ticketsLeft--;
 
                 dfs(i, grid, myRoute);
 
-                // TODO: 불필요한 grid 전체 순회가 발생한다. 어떻게 해결?
-                if (!checkAllTicketsAreUsed(grid)) {
-                    // 목적지에 도착하였으나 티켓이 남았을 경우 진입.
+                if (ticketsLeft != 0) {
+                    // 목적지에 도착하였으나 티켓이 남았을 경우, 마지막으로 사용했던 티켓을 취소하고 다른 티켓을 먼저 사용하도록 설정
                     currentlyAvailableDestinations[i]++;
+                    ticketsLeft++;
                     myRoute.pollLast();
                 }
             }
         }
-    }
-
-    private boolean checkAllTicketsAreUsed(int[][] grid) {
-        // grid의 각 원소는 잔여 방문 횟수를 의미하므로, 모두 0이 되어야 티켓을 모두 소진한 것.
-        for (int[] ints : grid) {
-            for (int anInt : ints) {
-                if (anInt > 0) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }
