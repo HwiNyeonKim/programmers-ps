@@ -4,43 +4,40 @@ import java.util.Arrays;
 
 public class SchoolAttendance {
     public int solution(int m, int n, int[][] puddles) {
-        // setup grid : true -> 이동 가능, false -> 물 웅덩이
-        boolean[][] grid = new boolean[n][m];
-        for (boolean[] line : grid) {
-            Arrays.fill(line, true);
+        // true -> 이동 가능, false -> 물 웅덩이
+        boolean[][] availableRoads = new boolean[n][m];
+        for (boolean[] roads : availableRoads) {
+            Arrays.fill(roads, true);
         }
         for (int[] puddle : puddles) {
-            grid[puddle[1] - 1][puddle[0] - 1] = false;
+            availableRoads[puddle[1] - 1][puddle[0] - 1] = false;
         }
-        //
 
-        int[][] answerSheet = new int[n][m];
+        int[][] availableRouteCount = new int[n][m];
 
-        // when row == 0
+        // 위쪽 가장자리에서 오른쪽으로 이동
         for (int col = 1; col < m; col++) {
-            if (!grid[0][col]) {
+            if (!availableRoads[0][col]) {
+                // 더이상 오른쪽으로 이동 불가능
                 break;
             }
-            answerSheet[0][col] = 1;
+            availableRouteCount[0][col] = 1;
         }
-        // when col == 0;
+        // 왼쪽 가장자리에서 아래쪽으로 이동
         for (int row = 1; row < n; row++) {
-            if (!grid[row][0]) {
+            if (!availableRoads[row][0]) {
+                // 더이상 아래쪽으로 이동 불가능
                 break;
             }
-            answerSheet[row][0] = 1;
+            availableRouteCount[row][0] = 1;
         }
 
         for (int row = 1; row < n; row++) {
             for (int col = 1; col < m; col++) {
-                if (!grid[row][col]) {
-                    answerSheet[row][col] = 0;
-                    continue;
-                }
-                answerSheet[row][col] = (answerSheet[row - 1][col] + answerSheet[row][col - 1]) % 1_000_000_007;
+                availableRouteCount[row][col] = availableRoads[row][col] ? (availableRouteCount[row - 1][col] + availableRouteCount[row][col - 1]) % 1_000_000_007 : 0;
             }
         }
 
-        return answerSheet[n - 1][m - 1];
+        return availableRouteCount[n - 1][m - 1];
     }
 }
