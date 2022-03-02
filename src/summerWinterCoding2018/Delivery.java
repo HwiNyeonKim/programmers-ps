@@ -1,7 +1,8 @@
-package exercise;
+package summerWinterCoding2018;
 
 import java.util.*;
 
+// 문제 : 배달 - https://programmers.co.kr/learn/courses/30/lessons/12978
 public class Delivery {
     final int inf = Integer.MAX_VALUE;
 

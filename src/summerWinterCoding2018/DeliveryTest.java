@@ -1,9 +1,7 @@
-package exercise;
+package summerWinterCoding2018;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DeliveryTest {
     Delivery obj = new Delivery();
