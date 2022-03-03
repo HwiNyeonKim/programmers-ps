@@ -16,3 +16,4 @@
 | [N으로 표현](https://programmers.co.kr/learn/courses/30/lessons/42895) | DP | 3 | Solved | [링크](https://praetoriani.tistory.com/27) |
 | [등굣길](https://programmers.co.kr/learn/courses/30/lessons/42898) | DP | 3 | Solved | [링크](https://praetoriani.tistory.com/29) |
 | [배달](https://programmers.co.kr/learn/courses/30/lessons/12978) | Graph | 2 | Solved | [링크](https://praetoriani.tistory.com/39) |
+| [가장 긴 팰린드롬](https://programmers.co.kr/learn/courses/30/lessons/12904) | Brute Force | 3 | Solved | [링크](https://praetoriani.tistory.com/34) |
