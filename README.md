@@ -18,3 +18,4 @@
 | [배달](https://programmers.co.kr/learn/courses/30/lessons/12978) | Graph | 2 | Solved | [링크](https://praetoriani.tistory.com/39) |
 | [가장 긴 팰린드롬](https://programmers.co.kr/learn/courses/30/lessons/12904) | Brute Force | 3 | Solved | [링크](https://praetoriani.tistory.com/34) |
 | [가장 먼 노드](https://programmers.co.kr/learn/courses/30/lessons/49189) | Graph | 3 | Solved | [링크](https://praetoriani.tistory.com/30) |
+| [순위](https://programmers.co.kr/learn/courses/30/lessons/49191) | Graph | 3 | Solved | [링크](https://praetoriani.tistory.com/31) |
