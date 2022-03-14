@@ -3,66 +3,62 @@ package greedy;
 import java.util.*;
 
 public class ConnectingIslands {
-
     public int solution(int n, int[][] costs) {
         int totalCost = 0;
 
-        List<Edge> edges = new ArrayList<>();
+        List<Edge> edges = new LinkedList<>();
         for (int[] cost : costs) {
             edges.add(new Edge(cost[0], cost[1], cost[2]));
         }
 
-        Set<Integer> vertices = new HashSet<>();
-        vertices.add(0); // starting point
+        Set<Integer> visited = new HashSet<>();
+        visited.add(0); // starting point
 
-        while (vertices.size() < n) {
+        while (visited.size() < n) {
             PriorityQueue<Edge> possibleEdges = new PriorityQueue<>();
-            for (int vertex : vertices) {
+            for (int island : visited) {
                 for (Edge edge : edges) {
-                    if (edge.isIncluding(vertex) && !isAlreadyBothPointsVisited(edge, vertices)) {
+                    if (edge.isConnecting(island)
+                            && (!visited.contains(edge.getIsland1()) || !visited.contains(edge.getIsland2()))
+                    ) {
                         possibleEdges.offer(edge);
                     }
                 }
             }
+
             Edge chosen = possibleEdges.poll();
             edges.remove(chosen);
-            if (!vertices.add(chosen.getOneSide())) {
-                vertices.add(chosen.getTheOtherSide());
-            }
+
+            visited.add(chosen.getIsland1());
+            visited.add(chosen.getIsland2());
             totalCost += chosen.getCost();
         }
 
         return totalCost;
     }
-
-    private boolean isAlreadyBothPointsVisited(Edge edge, Set<Integer> vertices) {
-        int v1 = edge.getOneSide();
-        int v2 = edge.getTheOtherSide();
-        return vertices.contains(v1) && vertices.contains(v2);
-    }
 }
 
 class Edge implements Comparable<Edge> {
-    private int oneSide;
-    private int theOtherSide;
-    private int cost;
+    private final int island1;
+    private final int island2;
+    private final int cost;
 
-    Edge(int one, int theOther, int cost) {
-        this.oneSide = one;
-        this.theOtherSide = theOther;
+    Edge(int island1, int island2, int cost) {
+        this.island1 = island1;
+        this.island2 = island2;
         this.cost = cost;
     }
 
-    public int getOneSide() {
-        return oneSide;
+    public int getIsland1() {
+        return island1;
     }
 
-    public int getTheOtherSide() {
-        return theOtherSide;
+    public int getIsland2() {
+        return island2;
     }
 
-    public boolean isIncluding(int vertex) {
-        return vertex == oneSide || vertex == theOtherSide;
+    public boolean isConnecting(int vertex) {
+        return vertex == island1 || vertex == island2;
     }
 
     public int getCost() {
@@ -75,7 +71,6 @@ class Edge implements Comparable<Edge> {
     }
 
     public boolean equals(Edge o) {
-        // for Set.remove()
-        return (oneSide == o.getOneSide()) && (theOtherSide == o.getTheOtherSide()) && (cost == o.getCost());
+        return (island1 == o.getIsland1()) && (island2 == o.getIsland2()) && (cost == o.getCost());
     }
 }
