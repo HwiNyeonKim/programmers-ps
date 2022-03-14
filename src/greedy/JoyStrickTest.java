@@ -8,12 +8,12 @@ class JoyStrickTest {
     JoyStrick obj = new JoyStrick();
 
     @Test
-    void solution1() {
+    void solution() {
         assertEquals(56, obj.solution("JEROEN"));
-    }
-
-    @Test
-    void solution2() {
         assertEquals(23, obj.solution("JAN"));
+        assertEquals(7, obj.solution("ABAAAAAAAAABB"));
+        assertEquals(10, obj.solution("BBBBAAAAAB"));
+        assertEquals(12, obj.solution("BBBBAAAABA"));
+        assertEquals(20, obj.solution("BBAAAAAABBBAAAAAABB"));
     }
 }
