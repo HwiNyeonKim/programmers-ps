@@ -4,30 +4,33 @@ import java.util.Arrays;
 
 public class LifeBoat {
     public int solution(int[] people, int limit) {
-        int count = 0;
-        // Arrays.sort(new int[][] {people}, Collections.reverseOrder());
+        int boatCount = 0;
         Arrays.sort(people);
 
         int heavyIdx = people.length - 1;
         int lightIdx = 0;
+
         while (heavyIdx > lightIdx) {
-            int heavyOne = people[heavyIdx];
-            int lightOne = people[lightIdx];
-            if ((heavyOne + lightOne) > limit) {
-                // 한 명 밖에 타지 못하는 경우
+            int heaviestPerson = people[heavyIdx];
+            int lightestPerson = people[lightIdx];
+
+            if (heaviestPerson + lightestPerson > limit) {
+                // 가장 무거운 사람 한 명이 보트 하나를 차지
                 heavyIdx--;
             } else {
-                // 두 명이 같이 탈 수 있는 경우
+                // 현재 남아있는 사람들 중 가장 무거운 사람과 가장 가벼운 사람이 같이 보트 탑승 가능
                 heavyIdx--;
                 lightIdx++;
             }
-            count++;
+
+            boatCount++;
         }
 
+        // 마지막 한 사람이 남아있는 경우
         if (heavyIdx == lightIdx) {
-            count++;
+            boatCount++;
         }
 
-        return count;
+        return boatCount;
     }
 }
