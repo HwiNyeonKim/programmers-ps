@@ -1,6 +1,5 @@
 package kakao2017;
 
-
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -8,16 +7,14 @@ public class TakingGroupPicture {
     public static Queue<String> candidates;
 
     public int solution(int n, String[] data) {
+        int count = 0;
         candidates = new ArrayDeque<>(40320);
 
-        // Sol. 1
-        // 전체 정렬 가능한 케이스를 모두 구한 후, 각 케이스별로 조건을 모두 만족하는지 확인한다.
-
         // 1. 먼저, 프렌즈들을 배치할 수 있는 모든 경우의 수를 계산한다.
-        buildPossibleCandidates("ACFJMNRT", "");
+        char[] chars = "ACFJMNRT".toCharArray();
+        permutation(chars, 0, 8);
 
         // 2. 각각의 배치 가능한 경우에 대해서, 주어진 제한 조건을 모두 만족하는지 확인한다.
-        int count = 0;
         while (!candidates.isEmpty()) {
             String candidate = candidates.poll();
             if (passConditions(candidate, data)) {
@@ -59,21 +56,27 @@ public class TakingGroupPicture {
         return true;
     }
 
-    // Permutation, 가능한 모든 배치의 가짓수를 계산하는 용도
-    private void buildPossibleCandidates(String friends, String answer) {
-        int friendsWaitingToBePositioned = friends.length();
+    private void permutation(char[] chars, int depth, int r) {
+        if (depth == r) {
+            StringBuilder answer = new StringBuilder();
+            for (int i = 0; i < r; i++) {
+                answer.append(chars[i]);
+            }
 
-        if (friendsWaitingToBePositioned == 0) {
-            candidates.offer(answer);
+            candidates.add(answer.toString());
             return;
         }
 
-        for (int i = 0; i < friendsWaitingToBePositioned ; i++) {
-            char friend = friends.charAt(i);
-
-            String notInPosition = friends.substring(0, i) + friends.substring(i + 1);
-
-            buildPossibleCandidates(notInPosition, answer + friend);
+        for (int i = depth; i < chars.length; i++) {
+            this.swap(chars, i, depth);
+            this.permutation(chars, depth + 1, r);
+            this.swap(chars, i, depth);
         }
+    }
+
+    private void swap(char[] chars, int i, int j) {
+        char temp = chars[i];
+        chars[i] = chars[j];
+        chars[j] = temp;
     }
 }
