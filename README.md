@@ -24,4 +24,5 @@
 | [체육복](https://programmers.co.kr/learn/courses/30/lessons/42862) | Greedy | 1 | [링크](https://praetoriani.tistory.com/21) |
 | [조이스틱](https://programmers.co.kr/learn/courses/30/lessons/42860) | Greedy | 2 | [링크](https://praetoriani.tistory.com/22) |
 | [구명보트](https://programmers.co.kr/learn/courses/30/lessons/42885) | Greedy| 2 | [링크](https://praetoriani.tistory.com/59) |
+| [단체사진 찍기](https://programmers.co.kr/learn/courses/30/lessons/1835) | DFS / BFS |  | [링크](https://praetoriani.tistory.com/60) |
 | 작성중... | | | |
