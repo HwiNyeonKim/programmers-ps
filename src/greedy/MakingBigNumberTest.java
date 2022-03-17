@@ -26,4 +26,9 @@ class MakingBigNumberTest {
     void solution4() {
         assertEquals("99", obj.solution("99991", 3));
     }
+
+    @Test
+    void solution5() {
+        assertEquals("991", obj.solution("889911", 3));
+    }
 }

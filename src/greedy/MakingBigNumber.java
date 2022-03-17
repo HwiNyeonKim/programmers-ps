@@ -1,42 +1,25 @@
 package greedy;
 
+import java.util.Stack;
+import java.util.stream.Collectors;
+
 public class MakingBigNumber {
     public String solution(String number, int k) {
-        StringBuilder answer = new StringBuilder();
-        char[] nums = number.toCharArray();
-        int startIdx = 0;
-        int endIdx = k;
-        int targetLength = number.length() - k;
+        Stack<Character> stack = new Stack<>();
 
-        while (k > 0 && answer.length() < targetLength) {
-            int maximumValueIndex = findMaximumValueIndex(nums, startIdx, endIdx);
-            answer.append(number.charAt(maximumValueIndex));
-            k -= (maximumValueIndex - startIdx);
-            startIdx = maximumValueIndex + 1;
-            endIdx = startIdx + k;
-        }
-
-        if (k == 0) {
-            answer.append(number.substring(startIdx));
-        }
-
-        return answer.toString();
-    }
-
-    private int findMaximumValueIndex(char[] nums, int start, int end) {
-        int max = nums[start] - '0';
-        int maxIdx = start;
-
-        for (int i = start + 1; i <= end; i++) {
-            if (max < (nums[i] - '0')) {
-                max = nums[i] - '0';
-                maxIdx = i;
+        int countRemoved = 0;
+        for (char ch : number.toCharArray()) {
+            while (!stack.isEmpty() && stack.peek() < ch && countRemoved < k) {
+                stack.pop();
+                countRemoved++;
             }
-            if (max == 9) {
-                break;
-            }
+
+            stack.push(ch);
         }
 
-        return maxIdx;
+        return stack.subList(0, number.length() - k)
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(""));
     }
 }
