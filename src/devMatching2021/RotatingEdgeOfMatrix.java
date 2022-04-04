@@ -1,8 +1,11 @@
 package devMatching2021;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class RotatingEdgeOfMatrix {
@@ -18,58 +21,62 @@ public class RotatingEdgeOfMatrix {
         List<Integer> answer = new ArrayList<>();
         // 2. 회전 시작
         for (int[] query : queries) {
-            answer.add(rotateMatrix(matrix, query));
+            answer.add(getMinRotatedValue(matrix, query));
         }
 
         return answer.stream().mapToInt(i -> i).toArray();
     }
 
-    private int rotateMatrix(int[][] matrix, int[] query) {
+    private int getMinRotatedValue(int[][] matrix, int[] query) {
+        // Rotate the matrix
+        List<Integer> rotatedValues = rotateMatrix(matrix, query);
+        // return minimum rotated value
+        return Collections.min(rotatedValues);
+    }
+
+    private List<Integer> rotateMatrix(int[][] matrix, int[] query) {
+        List<Integer> rotatedValues = new ArrayList<>();
         Queue<Integer> store = new LinkedList<>();
         int startRow = query[0] - 1;
         int startCol = query[1] - 1;
         int endRow = query[2] - 1;
         int endCol = query[3] - 1;
 
-        int min = Integer.MAX_VALUE; // return value
-
         store.offer(matrix[startRow][startCol]);
         // 1. 상단 가로줄 이동 (우측으로)
-        for (int col = startCol + 1; col <= endCol; col++) {
-            int beforeValue = store.poll();
-            store.offer(matrix[startRow][col]);
-            matrix[startRow][col] = beforeValue;
-            // 최솟값 업데이트
-            min = Math.min(beforeValue, min);
-        }
+        rotatedValues.addAll(moveHorizontalDir(store, matrix, startRow, startCol, endCol, 1));
 
         // 2. 우측 세로줄 이동 (하단으로)
-        for (int row = startRow + 1; row <= endRow; row++) {
-            int beforeValue = store.poll();
-            store.offer(matrix[row][endCol]);
-            matrix[row][endCol] = beforeValue;
-            // 최솟값 업데이트
-            min = Math.min(beforeValue, min);
-        }
+        rotatedValues.addAll(moveVerticalDir(store, matrix, endCol, startRow, endRow, 1));
 
         // 3. 하단 가로줄 이동 (좌측으로)
-        for (int col = endCol - 1; col >= startCol; col--) {
-            int beforeValue = store.poll();
-            store.offer(matrix[endRow][col]);
-            matrix[endRow][col] = beforeValue;
-            // 최솟값 업데이트
-            min = Math.min(beforeValue, min);
-        }
+        rotatedValues.addAll(moveHorizontalDir(store, matrix, endRow, endCol, startCol, -1));
 
         // 4. 좌측 세로줄 이동 (상단으로)
-        for (int row = endRow - 1; row >= startRow; row--) {
-            int beforeValue = store.poll();
-            store.offer(matrix[row][startCol]);
-            matrix[row][startCol] = beforeValue;
-            // 최솟값 업데이트
-            min = Math.min(beforeValue, min);
-        }
+        rotatedValues.addAll(moveVerticalDir(store, matrix, startCol, endRow, startRow, -1));
 
-        return min;
+        return rotatedValues;
+    }
+
+    private List<Integer> moveHorizontalDir(Queue<Integer> store, int[][] matrix, int row, int fromCol, int toCol, int step) {
+        List<Integer> movedValues = new ArrayList<>();
+        for (int col = fromCol + step; fromCol < toCol ? col <= toCol : col >= toCol; col += step) {
+            int beforeValue = store.poll();
+            store.offer(matrix[row][col]);
+            matrix[row][col] = beforeValue;
+            movedValues.add(beforeValue);
+        }
+        return movedValues;
+    }
+
+    private List<Integer> moveVerticalDir(Queue<Integer> store, int[][] matrix, int col, int fromRow, int toRow, int step) {
+        List<Integer> movedValues = new ArrayList<>();
+        for (int row = fromRow + step; fromRow < toRow ? row <= toRow : row >= toRow; row += step) {
+            int beforeValue = store.poll();
+            store.offer(matrix[row][col]);
+            matrix[row][col] = beforeValue;
+            movedValues.add(beforeValue);
+        }
+        return movedValues;
     }
 }
