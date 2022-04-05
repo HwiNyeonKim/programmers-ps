@@ -17,24 +17,16 @@ public class ParenthesisConversion {
 
         // 2. 문자열 w를 두 "균형잡힌 괄호 문자열" u, v로 분리합니다.
         // 단, u는 "균형잡힌 괄호 문자열"로 더 이상 분리할 수 없어야 하며, v는 빈 문자열이 될 수 있습니다.
-        Stack<Character> leftParenthesis = new Stack<>();
-        Stack<Character> rightParenthesis = new Stack<>();
-        int cutIndex = 0;
-        for (; cutIndex < w.length(); cutIndex++) {
-            char ch = w.charAt(cutIndex);
-            switch (ch) {
-                case '(':
-                    leftParenthesis.push(ch);
-                    break;
-                case ')':
-                    rightParenthesis.push(ch);
-                    break;
+        int leftParenthesisCount = 0;
+        int rightParenthesisCount = 0;
+        int cutIndex = -1;
+        do {
+            cutIndex++;
+            switch (w.charAt(cutIndex)) {
+                case '(' -> leftParenthesisCount++;
+                case ')' -> rightParenthesisCount++;
             }
-
-            if (leftParenthesis.size() == rightParenthesis.size()) {
-                break;
-            }
-        }
+        } while (leftParenthesisCount != rightParenthesisCount);
 
         String u = w.substring(0, Math.min(cutIndex + 1, w.length()));
         String v = w.substring(cutIndex + 1);
@@ -52,19 +44,9 @@ public class ParenthesisConversion {
         //   4-4. u의 첫 번째와 마지막 문자를 제거하고, 나머지 문자열의 괄호 방향을 뒤집어서 뒤에 붙입니다.
         //   4-5. 생성된 문자열을 반환합니다.
         StringBuilder uu = new StringBuilder("(" + solution(v) + ")"); // [4-1] ~ [4-3]
-        // Do 4-4
-        u = u.substring(1, u.length() - 1);
-        for (char ch : u.toCharArray()) {
-            switch (ch) {
-                case '(':
-                    uu.append(')');
-                    break;
-                case ')':
-                    uu.append('(');
-                    break;
-            }
+        for (int i = 1; i < u.length() - 1; i++) {
+            uu.append(u.charAt(i) == '(' ? ")" : "(");
         }
-        // End 4-4
 
         return uu.toString();
     }
@@ -73,16 +55,14 @@ public class ParenthesisConversion {
         Stack<Character> stack = new Stack<>();
         for (char ch : str.toCharArray()) {
             switch (ch) {
-                case '(':
-                    stack.push(ch);
-                    break;
-                case ')':
+                case '(' -> stack.push(ch);
+                case ')' -> {
                     try {
                         stack.pop();
                     } catch (EmptyStackException e) {
                         return false;
                     }
-                    break;
+                }
             }
         }
         return stack.isEmpty();
