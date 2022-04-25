@@ -23,8 +23,12 @@ class RotatingParenthesisTest {
     }
 
     @Test
-    void
-    solution4() {
+    void solution4() {
         assertEquals(0, obj.solution("}}}"));
+    }
+
+    @Test
+    void solution5() {
+        assertEquals(1, obj.solution("}}}{{{"));
     }
 }
