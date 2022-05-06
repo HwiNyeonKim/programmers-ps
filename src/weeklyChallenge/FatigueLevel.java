@@ -1,7 +1,6 @@
 package weeklyChallenge;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 // URL: https://programmers.co.kr/learn/courses/30/lessons/87946
