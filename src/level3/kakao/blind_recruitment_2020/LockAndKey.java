@@ -34,7 +34,11 @@ public class LockAndKey {
 
 
             // 자물쇠의 홈의 위치 계산
-            List<Point> insertPoint = findPoints(lock, 0); // (1, 2), (2, 1)
+            List<Point> insertPoint = findPoints(lock, 0);
+            // 자물쇠가 이미 열려있는 경우라면 바로 return true
+            if (insertPoint.size() == 0) {
+                return true;
+            }
 
             // 사용 가능한 키 패턴 찾기
             List<int[][]> keys = new ArrayList<>();
@@ -52,6 +56,7 @@ public class LockAndKey {
 
             // 각 키 별로 자물쇠에 넣어보기
             for (int[][] currentKey : keys) {
+                // 열쇠의 돌기 위치
                 List<Point> keyShape = findPoints(currentKey, 1); // (1, 0), (2, 1), (2, 2)
 
                 // 키의 돌기가 자물쇠의 홈에 모두 들어가는지 확인
@@ -69,15 +74,14 @@ public class LockAndKey {
 
         for (int i = 0; i < trial; i++) {
             Point pivot = insertPoint.get(i);
-            int dx = pivot.x;
-            int dy = pivot.y;
 
             // 키의 위치 업데이트
             for (Point point : keyShape) {
-                point.x += dx;
-                point.y += dy;
+                point.x += pivot.x;
+                point.y += pivot.y;
             }
 
+            // 오픈 시도!
             if (isHit(keyShape, insertPoint)) {
                 return true;
             }
@@ -93,8 +97,18 @@ public class LockAndKey {
                 continue;
             }
 
-            if (!insertPoint.contains(point)) {
-                return false;
+            int hitCount = 0;
+            if (insertPoint.contains(point)) {
+                // 열쇠의 돌기가 자물쇠 홈에 맞은 경우, 몇개나 맞는지 카운트
+                hitCount++;
+            } else {
+                // 하나라도 맞물리지 않으면 열 수 없다.
+                continue;
+            }
+
+            // 자물쇠의 모든 홈이 다 열쇠의 돌기로 차야 한다.
+            if (hitCount == insertPoint.size()) {
+                return true;
             }
         }
 

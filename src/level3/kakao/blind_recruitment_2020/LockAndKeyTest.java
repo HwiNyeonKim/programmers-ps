@@ -19,4 +19,17 @@ class LockAndKeyTest {
                 {1, 0, 1}
         }));
     }
+
+    @Test
+    void solution2() {
+        assertEquals(true, obj.solution(new int[][] {
+                {0, 0, 0},
+                {0, 0, 0},
+                {0, 0, 0}
+        }, new int[][] {
+                {1, 1, 1},
+                {1, 1, 1},
+                {1, 1, 1}
+        }));
+    }
 }
