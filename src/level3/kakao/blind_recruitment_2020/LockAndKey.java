@@ -22,17 +22,12 @@ public class LockAndKey {
     }
 
     private static int N;
-    private static int M;
 
     public boolean solution(int[][] key, int[][] lock) {
         N = lock.length;
-        M = key.length;
 
         // 열쇠를 우측과 하단으로만 움직이므로 좌측과 상단으로 움직이는 케이스를 보기 위해 자물쇠도 회전시켜가며 확인한다.
         for (int i = 0; i < 4; i++) {
-            lock = rotateMatrix(lock);
-
-
             // 자물쇠의 홈의 위치 계산
             List<Point> insertPoint = findPoints(lock, 0);
             // 자물쇠가 이미 열려있는 경우라면 바로 return true
@@ -45,14 +40,9 @@ public class LockAndKey {
 
             keys.add(key); // 0 degree rotated key
 
-            key = rotateMatrix(key);
-            keys.add(key); // 90 degrees rotated key
-
-            key = rotateMatrix(key);
-            keys.add(key); // 180 degrees rotate key
-
-            key = rotateMatrix(key);
-            keys.add(key); // 270 degrees rotate key
+            keys.add(rotateMatrix(keys.get(0))); // 90 degrees rotated key
+            keys.add(rotateMatrix(keys.get(1))); // 180 degrees rotate key
+            keys.add(rotateMatrix(keys.get(2))); // 270 degrees rotate key
 
             // 각 키 별로 자물쇠에 넣어보기
             for (int[][] currentKey : keys) {
@@ -64,6 +54,8 @@ public class LockAndKey {
                     return true;
                 }
             }
+
+            lock = rotateMatrix(lock);
         }
 
         return false; // 못연다
@@ -79,19 +71,21 @@ public class LockAndKey {
             int cases = keyShape.size();
             for (int j = 0; j < cases; j++) {
                 Point basis = keyShape.get(j);
-                int basisX = basis.x;
-                int basisY = basis.y;
+
+                List<Point> updatedKeyShape = new ArrayList<>();
 
                 // 각 점의 위치를 basis를 기준으로 하는 상대위치로 변경 -> basis의 위치를 pivot으로 이동하고, 나머지 점들의 위치도 이에 맞게 이동
                 for (Point point : keyShape) {
-                    point.x = point.x - basisX + pivot.x;
-                    point.y = point.y - basisY + pivot.y;
-                }
-            }
+                    int newX = point.x - basis.x + pivot.x;
+                    int newY = point.y - basis.y + pivot.y;
 
-            // 오픈 시도!
-            if (isHit(keyShape, insertPoint)) {
-                return true;
+                    updatedKeyShape.add(new Point(newX, newY));
+                }
+
+                // 오픈 시도!
+                if (isHit(updatedKeyShape, insertPoint)) {
+                    return true;
+                }
             }
         }
 
@@ -100,6 +94,7 @@ public class LockAndKey {
 
     private boolean isHit(List<Point> updatedKeyShape, List<Point> insertPoint) {
         int hitCount = 0;
+
         for (Point point : updatedKeyShape) {
             // 자물쇠 범위를 벗어나는 값은 볼 필요 없다.
             if (point.x >= N || point.y >= N) {
@@ -110,17 +105,13 @@ public class LockAndKey {
                 // 열쇠의 돌기가 자물쇠 홈에 맞은 경우, 몇개나 맞는지 카운트
                 hitCount++;
             } else {
-                // 하나라도 맞물리지 않으면 열 수 없다.
-                continue;
-            }
-
-            // 자물쇠의 모든 홈이 다 열쇠의 돌기로 차야 한다.
-            if (hitCount == insertPoint.size()) {
-                return true;
+                // 돌기와 돌기가 만나면 무조건 실패!
+                return false;
             }
         }
 
-        return false;
+        // 자물쇠의 모든 홈이 다 열쇠의 돌기로 차야 한다.
+        return hitCount == insertPoint.size();
     }
 
     private List<Point> findPoints(int[][] matrix, int target) {
