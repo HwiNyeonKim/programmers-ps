@@ -57,7 +57,7 @@ public class LockAndKey {
             // 각 키 별로 자물쇠에 넣어보기
             for (int[][] currentKey : keys) {
                 // 열쇠의 돌기 위치
-                List<Point> keyShape = findPoints(currentKey, 1); // (1, 0), (2, 1), (2, 2)
+                List<Point> keyShape = findPoints(currentKey, 1);
 
                 // 키의 돌기가 자물쇠의 홈에 모두 들어가는지 확인
                 if (isPossibleToOpen(keyShape, insertPoint)) {
@@ -75,10 +75,18 @@ public class LockAndKey {
         for (int i = 0; i < trial; i++) {
             Point pivot = insertPoint.get(i);
 
-            // 키의 위치 업데이트
-            for (Point point : keyShape) {
-                point.x += pivot.x;
-                point.y += pivot.y;
+            // 열쇠의 돌기를 각 빈 칸에 꽂아보기
+            int cases = keyShape.size();
+            for (int j = 0; j < cases; j++) {
+                Point basis = keyShape.get(j);
+                int basisX = basis.x;
+                int basisY = basis.y;
+
+                // 각 점의 위치를 basis를 기준으로 하는 상대위치로 변경 -> basis의 위치를 pivot으로 이동하고, 나머지 점들의 위치도 이에 맞게 이동
+                for (Point point : keyShape) {
+                    point.x = point.x - basisX + pivot.x;
+                    point.y = point.y - basisY + pivot.y;
+                }
             }
 
             // 오픈 시도!
@@ -91,13 +99,13 @@ public class LockAndKey {
     }
 
     private boolean isHit(List<Point> updatedKeyShape, List<Point> insertPoint) {
+        int hitCount = 0;
         for (Point point : updatedKeyShape) {
             // 자물쇠 범위를 벗어나는 값은 볼 필요 없다.
             if (point.x >= N || point.y >= N) {
                 continue;
             }
 
-            int hitCount = 0;
             if (insertPoint.contains(point)) {
                 // 열쇠의 돌기가 자물쇠 홈에 맞은 경우, 몇개나 맞는지 카운트
                 hitCount++;
@@ -112,7 +120,7 @@ public class LockAndKey {
             }
         }
 
-        return true;
+        return false;
     }
 
     private List<Point> findPoints(int[][] matrix, int target) {
@@ -131,14 +139,14 @@ public class LockAndKey {
 
     private int[][] rotateMatrix(int[][] matrix) {
         // rotate key 90 degrees in ccw
-        int[][] newKey = new int[matrix.length][matrix.length];
+        int[][] newMatrix = new int[matrix.length][matrix.length];
 
-        for (int i = matrix.length - 1; i >= 0; i--) {
+        for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
-                newKey[matrix.length - i - 1][j] = matrix[i][j];
+                newMatrix[i][j] = matrix[j][matrix.length - i - 1];
             }
         }
 
-        return newKey;
+        return newMatrix;
     }
 }
